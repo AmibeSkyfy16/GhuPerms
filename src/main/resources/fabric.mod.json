@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "ghuperms",
+  "version": "${version}",
+  "name": "GhuPerms",
+  "description": "Permission manager mod",
+  "authors": [
+    "Skyfy16"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/ghuperms/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      {
+        "adapter": "kotlin",
+        "value": "ch.skyfy.ghuperms.GhuPermsMod"
+      }
+    ],
+    "main": []
+  },
+  "mixins": [
+    "ghuperms.mixin.json"
+  ],
+  "depends": {
+    "java": ">=17",
+    "minecraft": "1.19.3",
+    "fabric": "*",
+    "fabricloader": ">=0.14.14",
+    "fabric-language-kotlin": ">=1.9.1+kotlin.1.8.10"
+  }
+}

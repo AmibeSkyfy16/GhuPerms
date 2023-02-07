@@ -1,0 +1,7 @@
+
+"preLaunch": [
+      {
+        "adapter": "kotlin",
+        "value": "ch.skyfy.ghuperms.GhuPermsModPreLaunch"
+      }
+    ],
