@@ -9,9 +9,7 @@ fun interface RemoveFromOperatorsCallback {
 
     companion object {
         val EVENT: Event<RemoveFromOperatorsCallback> = EventFactory.createArrayBacked(RemoveFromOperatorsCallback::class.java) { listeners ->
-            RemoveFromOperatorsCallback { profile ->
-                for (listener in listeners) listener.onRemoveFromOperators(profile)
-            }
+            RemoveFromOperatorsCallback { profile -> for (listener in listeners) listener.onRemoveFromOperators(profile) }
         }
     }
 

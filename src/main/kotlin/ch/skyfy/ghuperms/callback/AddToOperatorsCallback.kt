@@ -9,9 +9,7 @@ fun interface AddToOperatorsCallback {
 
     companion object {
         val EVENT: Event<AddToOperatorsCallback> = EventFactory.createArrayBacked(AddToOperatorsCallback::class.java) { listeners ->
-            AddToOperatorsCallback { profile ->
-                for (listener in listeners) listener.onAddToOperators(profile)
-            }
+            AddToOperatorsCallback { profile -> for (listener in listeners) listener.onAddToOperators(profile) }
         }
     }
 

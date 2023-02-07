@@ -80,8 +80,6 @@ object Permissions {
                         }
                         if(permissionNameToCheck == sb.toString()) if(commandPermission.value) return true
                     }
-
-//                    if(commandPermission.name.split(".").contains(permissionNameToCheck)) return true
                 }
             }
         }

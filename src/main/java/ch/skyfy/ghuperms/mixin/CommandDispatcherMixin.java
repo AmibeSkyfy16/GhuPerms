@@ -54,13 +54,13 @@ public abstract class CommandDispatcherMixin<S> {
 //
 //    }
 
-    @Inject(method = "parseNodes", at = @At("HEAD"), cancellable = true)
-    void onParse(CommandNode<S> node, StringReader originalReader, CommandContextBuilder<S> contextSoFar, CallbackInfoReturnable<ParseResults<S>> cir){
-
-        OnParseNodesCallback.EVENT.invoker().onParseNode(node, originalReader, contextSoFar, cir.getReturnValue());
-
-        System.out.println();
-
-    }
+//    @Inject(method = "parseNodes", at = @At("HEAD"), cancellable = true)
+//    void onParse(CommandNode<S> node, StringReader originalReader, CommandContextBuilder<S> contextSoFar, CallbackInfoReturnable<ParseResults<S>> cir){
+//
+//        OnParseNodesCallback.EVENT.invoker().onParseNode(node, originalReader, contextSoFar, cir.getReturnValue());
+//
+//        System.out.println();
+//
+//    }
 
 }

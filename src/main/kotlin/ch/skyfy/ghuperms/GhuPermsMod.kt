@@ -2,7 +2,6 @@ package ch.skyfy.ghuperms
 
 import ch.skyfy.ghuperms.callback.AddToOperatorsCallback
 import ch.skyfy.ghuperms.callback.RemoveFromOperatorsCallback
-import ch.skyfy.ghuperms.commands.EnableDisableAllCommandCmd
 import ch.skyfy.ghuperms.commands.ReloadFilesCmd
 import ch.skyfy.ghuperms.config.Configs
 import ch.skyfy.ghuperms.data.Group
@@ -64,7 +63,6 @@ class GhuPermsMod : DedicatedServerModInitializer {
 
     private fun registerCommands() = CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
         ReloadFilesCmd.register(dispatcher)
-        EnableDisableAllCommandCmd.register(dispatcher)
     }
 
 }

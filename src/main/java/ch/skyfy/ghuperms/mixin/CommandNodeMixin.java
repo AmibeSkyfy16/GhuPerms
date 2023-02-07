@@ -1,14 +1,12 @@
 package ch.skyfy.ghuperms.mixin;
 
-import ch.skyfy.ghuperms.callback.OnAddChildCallback;
-import ch.skyfy.ghuperms.callback.OnCanUseCallback;
+import ch.skyfy.ghuperms.callback.AddChildCallback;
+import ch.skyfy.ghuperms.callback.CanUseCallback;
 import ch.skyfy.ghuperms.ducks.CommandNodeDuck;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.RedirectModifier;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.ActionResult;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -113,21 +111,15 @@ public abstract class CommandNodeMixin<S> implements CommandNodeDuck<S> {
     @SuppressWarnings("unchecked")
     @Inject(method = "addChild", at = @At("HEAD"), remap = false)
     private void commandHider$onAddChild(CommandNode<S> child, CallbackInfo ci) {
-        OnAddChildCallback.EVENT.invoker().onAddChild((CommandNodeDuck<S>) child, (CommandNode<S>) (Object) this);
+        AddChildCallback.EVENT.invoker().onAddChild((CommandNodeDuck<S>) child, (CommandNode<S>) (Object) this);
 //        ((CommandNodeDuck<S>) child).addParent((CommandNode<S>) (Object) this);
     }
 
     @SuppressWarnings("unchecked")
     @Inject(method = "canUse", at = @At("RETURN"), cancellable = true, remap = false)
     private void commandHider$onCanUse(S source, CallbackInfoReturnable<Boolean> cir) {
-//        if(source instanceof CommandSource) {
-            var result = OnCanUseCallback.EVENT.invoker().onCanUse(children, parents, ancestries, ((CommandNode<S>) (Object) this), source);
-            cir.setReturnValue(result.getValue());
-            cir.cancel();
-//            if (result.getResult() == ActionResult.FAIL) {
-//                cir.setReturnValue(result.getValue());
-//            cir.cancel();
-//            }
-//        }
+        var result = CanUseCallback.EVENT.invoker().onCanUse(children, parents, ancestries, ((CommandNode<S>) (Object) this), source);
+        cir.setReturnValue(result.getValue());
+        cir.cancel();
     }
 }

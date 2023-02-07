@@ -6,24 +6,20 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
 @FunctionalInterface
-public interface OnAddChildCallback {
+public interface AddChildCallback {
 
-    Event<OnAddChildCallback> EVENT = EventFactory.createArrayBacked(
-            OnAddChildCallback.class,
-            onAddChildCallbacks -> new OnAddChildCallback() {
+    Event<AddChildCallback> EVENT = EventFactory.createArrayBacked(
+            AddChildCallback.class,
+            addChildCallbacks -> new AddChildCallback() {
                 @Override
                 public <S> void onAddChild(CommandNodeDuck<S> child, CommandNode<S> instance) {
-                    for (var onCanUseCallback2 : onAddChildCallbacks) {
+                    for (var onCanUseCallback2 : addChildCallbacks) {
                         onCanUseCallback2.onAddChild(child, instance);
                     }
-
                 }
             }
     );
 
-    <S> void onAddChild(
-            CommandNodeDuck<S> child,
-            CommandNode<S> instance
-    );
+    <S> void onAddChild(CommandNodeDuck<S> child, CommandNode<S> instance);
 
 }

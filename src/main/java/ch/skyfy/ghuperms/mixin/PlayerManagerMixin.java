@@ -2,7 +2,6 @@ package ch.skyfy.ghuperms.mixin;
 
 import ch.skyfy.ghuperms.callback.AddToOperatorsCallback;
 import ch.skyfy.ghuperms.callback.RemoveFromOperatorsCallback;
-import ch.skyfy.ghuperms.config.Configs;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.PlayerManager;
 import org.spongepowered.asm.mixin.Mixin;

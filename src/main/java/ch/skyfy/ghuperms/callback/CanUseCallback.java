@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.Set;
 
 @FunctionalInterface
-public interface OnCanUseCallback {
+public interface CanUseCallback {
 
-    Event<OnCanUseCallback> EVENT = EventFactory.createArrayBacked(
-            OnCanUseCallback.class,
-            onCanUseCallbackS -> new OnCanUseCallback() {
+    Event<CanUseCallback> EVENT = EventFactory.createArrayBacked(
+            CanUseCallback.class,
+            canUseCallbackS -> new CanUseCallback() {
                 @Override
                 public <SS> TypedActionResult<Boolean> onCanUse(Map<String, CommandNode<SS>> children, Set<CommandNode<SS>> parents, Map<RootCommandNode<SS>, List<List<CommandNode<SS>>>> ancestries, CommandNode<SS> instance, SS source) {
-                    for (var onCanUseCallback2 : onCanUseCallbackS) {
+                    for (var onCanUseCallback2 : canUseCallbackS) {
                         TypedActionResult<Boolean> result = onCanUseCallback2.onCanUse(children, parents, ancestries, instance, source);
                         if (!result.getValue()) {
                             return result;
@@ -29,11 +29,11 @@ public interface OnCanUseCallback {
             }
     );
 
-    <SS> TypedActionResult<Boolean> onCanUse(
-            Map<String, CommandNode<SS>> children,
-            Set<CommandNode<SS>> parents,
-            Map<RootCommandNode<SS>, List<List<CommandNode<SS>>>> ancestries,
-            CommandNode<SS> instance,
-            SS source);
+    <S> TypedActionResult<Boolean> onCanUse(
+            Map<String, CommandNode<S>> children,
+            Set<CommandNode<S>> parents,
+            Map<RootCommandNode<S>, List<List<CommandNode<S>>>> ancestries,
+            CommandNode<S> instance,
+            S source);
 
 }
