@@ -1,6 +1,7 @@
 package ch.skyfy.ghuperms.commands
 
 import ch.skyfy.ghuperms.GhuPermsMod
+import ch.skyfy.ghuperms.javafx.JavaFXApp
 import ch.skyfy.ghuperms.utils.ModsUtils
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.Command.SINGLE_SUCCESS
@@ -24,7 +25,7 @@ class StartGUICmd : Command<ServerCommandSource> {
         if (ModsUtils.canUseGUI()) {
             println("Starting the JavaFX Permission Manager")
             object : Thread(Runnable {
-                Application.launch(GhuPermsMod.App::class.java)
+                Application.launch(JavaFXApp::class.java)
             }) {init { this.name = "GUI Thread" } }.start()
         }
         return SINGLE_SUCCESS
