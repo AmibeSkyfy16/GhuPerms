@@ -2,13 +2,14 @@ package ch.skyfy.ghuperms.javafx
 
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 
-class JavaFXApp : Application() {
+class PermissionManagerApp : Application() {
     override fun start(stage: Stage) {
-        stage.scene = Scene(StackPane(), 400.0, 400.0)
-        stage.title = "Test"
+        stage.title = "Permission Manager GUI"
+        stage.width = 1600.0
+        stage.height = 800.0
+        stage.scene = Scene(RootView())
         stage.show()
     }
 }

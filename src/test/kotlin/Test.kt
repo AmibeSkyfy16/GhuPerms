@@ -1,9 +1,28 @@
+import ch.skyfy.ghuperms.commands.StartGUICmd
+import ch.skyfy.ghuperms.javafx.PermissionManagerApp
+import javafx.application.Application
+import javafx.application.Platform
+import org.junit.jupiter.api.BeforeAll
 import kotlin.test.Test
+
 
 class Test {
 
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun initJfxRuntime(): Unit {
+            println("beforeALL")
+            Platform.startup {}
+        }
+    }
+
     @Test
     fun test() {
+
+//        Application.launch(PermissionManagerApp::class.java)
+
+//        println("")
 //        val str1 = "homes.commands.*"
 //        val str2 = "homes.commands.homes.create"
 

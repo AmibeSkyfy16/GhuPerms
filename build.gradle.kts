@@ -40,7 +40,7 @@ plugins {
     id("fabric-loom") version "1.1-SNAPSHOT"
     id("org.jetbrains.kotlin.jvm") version "1.8.10"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
-    id("org.openjfx.javafxplugin") version "0.0.9"
+    id("org.openjfx.javafxplugin") version "0.0.13"
     idea
 }
 
@@ -85,7 +85,7 @@ tasks {
     }
 
     javafx{
-        version = "15.0.1"
+        version = "17"
         modules("javafx.controls", "javafx.fxml")
     }
 

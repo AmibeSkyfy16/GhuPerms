@@ -30,7 +30,7 @@ import kotlin.io.path.*
 class GhuPermsMod : DedicatedServerModInitializer {
 
     companion object {
-        private const val MOD_ID: String = "ghuperms"
+        const val MOD_ID: String = "ghuperms"
         val CONFIG_DIRECTORY: Path = FabricLoader.getInstance().configDir.resolve(MOD_ID)
         val LOGGER: Logger = LogManager.getLogger(GhuPermsMod::class.java)
     }
@@ -74,7 +74,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
     private fun registerCommands() = CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
         ReloadFilesCmd.register(dispatcher)
         PermissionsCmd.register(dispatcher)
-        StartGUICmd.register(dispatcher)
+//        StartGUICmd.register(dispatcher)
     }
 
 }
