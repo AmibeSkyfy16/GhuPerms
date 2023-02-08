@@ -18,6 +18,13 @@ object FXMLUtils {
 //        loadFXML(FabricLoader.getInstance().getModContainer(GhuPermsMod.MOD_ID).get().findPath("javafx/ui/fxml/${view!!::class.java.simpleName}.fxml").get(), view)
     }
 
+    fun <R> loadFXML(fxmlName: String, view: R) {
+//        loadFXML(FabricLoader.getInstance().getModContainer(GhuPermsMod.MOD_ID).get().findPath("javafx/ui/fxml/RootView.fxml").get(), view)
+        val p = view!!::class.java.classLoader.getResource("javafx/ui/fxml/$fxmlName")
+        loadFXML(p, view)
+//        loadFXML(FabricLoader.getInstance().getModContainer(GhuPermsMod.MOD_ID).get().findPath("javafx/ui/fxml/${view!!::class.java.simpleName}.fxml").get(), view)
+    }
+
     fun <R> loadFXML(path: Path, view: R) {
         try {
             object : FXMLLoader(path.toUri().toURL()) {

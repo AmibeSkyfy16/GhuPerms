@@ -74,7 +74,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
     private fun registerCommands() = CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
         ReloadFilesCmd.register(dispatcher)
         PermissionsCmd.register(dispatcher)
-//        StartGUICmd.register(dispatcher)
+        StartGUICmd.register(dispatcher)
     }
 
 }

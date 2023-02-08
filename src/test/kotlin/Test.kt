@@ -20,7 +20,7 @@ class Test {
     @Test
     fun test() {
 
-//        Application.launch(PermissionManagerApp::class.java)
+        Application.launch(PermissionManagerApp::class.java)
 
 //        println("")
 //        val str1 = "homes.commands.*"
