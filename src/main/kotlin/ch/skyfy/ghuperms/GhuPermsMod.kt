@@ -4,11 +4,17 @@ import ch.skyfy.ghuperms.callback.AddToOperatorsCallback
 import ch.skyfy.ghuperms.callback.RemoveFromOperatorsCallback
 import ch.skyfy.ghuperms.commands.PermissionsCmd
 import ch.skyfy.ghuperms.commands.ReloadFilesCmd
+import ch.skyfy.ghuperms.commands.StartGUICmd
 import ch.skyfy.ghuperms.config.Configs
 import ch.skyfy.ghuperms.data.Group
 import ch.skyfy.ghuperms.utils.ModsUtils.getPlayerNameWithUUID
 import ch.skyfy.json5configlib.ConfigManager
 import ch.skyfy.json5configlib.updateIterableNested
+import javafx.application.Application
+import javafx.application.Platform
+import javafx.scene.Scene
+import javafx.scene.layout.StackPane
+import javafx.stage.Stage
 import net.fabricmc.api.DedicatedServerModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
@@ -16,7 +22,10 @@ import net.fabricmc.loader.api.FabricLoader
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.*
 
+@OptIn(ExperimentalPathApi::class)
 @Suppress("MemberVisibilityCanBePrivate")
 class GhuPermsMod : DedicatedServerModInitializer {
 
@@ -65,6 +74,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
     private fun registerCommands() = CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
         ReloadFilesCmd.register(dispatcher)
         PermissionsCmd.register(dispatcher)
+        StartGUICmd.register(dispatcher)
     }
 
 }
