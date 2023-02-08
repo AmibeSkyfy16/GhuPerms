@@ -28,101 +28,130 @@ import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 
-class PermissionCmd : Command<ServerCommandSource> {
+class PermissionsCmd : Command<ServerCommandSource> {
 
     companion object {
         fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
             val cmd = literal("ghuperms").requires { source -> source.hasPermissionLevel(4) }
                 .then(
-                    literal("permissions").then(
-                        literal("saveAllPermissions").executes(Command {
-//                            if (it.source.player != null) it.source.player!!.server.commandManager.sendCommandTree(it.source.player!!)
-                            if (it.source.player != null) sendCommandTreeToAll(it.source.player!!.server.playerManager)
-                            ConfigManager.save(Configs.PERMISSIONS_DATA)
-                            it.source.player?.sendMessage(Text.literal("Saved ! You can find a list of all permissions in the all-permissions.json5 file").setStyle(Style.EMPTY.withColor(Formatting.GOLD)))
-                            return@Command 1
-                        })
-                    ).then(
-                        literal("add").then(
-                            argument("permissionName", StringArgumentType.string())
-                                .suggests { _, suggestionsBuilder -> suggestMatching(Configs.PERMISSIONS_DATA.serializableData.list, suggestionsBuilder) }
+                    literal("permissions")
+                        .then(
+                            literal("saveAllPermissions").executes(Command {
+                                if (it.source.player != null) sendCommandTreeToAll(it.source.player!!.server.playerManager)
+                                ConfigManager.save(Configs.PERMISSIONS_DATA)
+                                it.source.player?.sendMessage(Text.literal("Saved ! You can find a list of all permissions in the all-permissions.json5 file").setStyle(Style.EMPTY.withColor(Formatting.GOLD)))
+                                return@Command 1
+                            })
+                        ).then(
+                            literal("add")
                                 .then(
-                                    argument("value", BoolArgumentType.bool())
-                                        .suggests { _, suggestionsBuilder -> suggestMatching(listOf(true, false), suggestionsBuilder, { t -> t.toString() }, { _ -> Message { "" } }) }
+                                    argument("permissionName", StringArgumentType.string())
+                                        .suggests { _, suggestionsBuilder -> suggestMatching(Configs.PERMISSIONS_DATA.serializableData.list, suggestionsBuilder) }
+                                        .then(
+                                            argument("value", BoolArgumentType.bool())
+                                                .suggests { _, suggestionsBuilder -> suggestMatching(listOf(true, false), suggestionsBuilder, { t -> t.toString() }, { _ -> Message { "" } }) }
+                                                .then(
+                                                    argument("groupName", StringArgumentType.string())
+                                                        .suggests { _, suggestionsBuilder -> suggestMatching(Configs.GROUPS.serializableData.list.map { it.name }, suggestionsBuilder) }
+                                                        .executes(AddPermissionToGroupCommand())
+                                                )
+                                        )
+                                )
+                        ).then(
+                            literal("remove")
+                                .then(
+                                    argument("permissionName", StringArgumentType.string())
+                                        .suggests { _, suggestionsBuilder -> suggestMatching(Configs.PERMISSIONS_DATA.serializableData.list, suggestionsBuilder) }
                                         .then(
                                             argument("groupName", StringArgumentType.string())
                                                 .suggests { _, suggestionsBuilder -> suggestMatching(Configs.GROUPS.serializableData.list.map { it.name }, suggestionsBuilder) }
-                                                .executes(AddPermissionToGroupCommand())
+                                                .executes(RemovePermissionFromGroupCommand())
                                         )
                                 )
                         )
-                    ).then(
-                        literal("remove").then(
-                            argument("permissionName", StringArgumentType.string())
-                                .suggests { _, suggestionsBuilder -> suggestMatching(Configs.PERMISSIONS_DATA.serializableData.list, suggestionsBuilder) }
+                ).then(
+                    literal("groups")
+                        .then(
+                            literal("add")
                                 .then(
-                                    argument("groupName", StringArgumentType.string())
-                                        .suggests { _, suggestionsBuilder -> suggestMatching(Configs.GROUPS.serializableData.list.map { it.name }, suggestionsBuilder) }
-                                        .executes(RemovePermissionFromGroupCommand())
+                                    literal("player")
+                                        .then(
+                                            argument("playerName", StringArgumentType.string()).suggests { context, sb -> suggestMatching(context.source.server.playerNames.toList(), sb) }
+                                                .then(
+                                                    argument("groupName", StringArgumentType.string())
+                                                        .suggests { context, suggestionsBuilder ->
+                                                            val playerName = getString(context, "playerName")
+                                                            val player = context.source.server.playerManager.getPlayer(playerName)
+                                                            val playerNameWithUUID = if (player != null) getPlayerNameWithUUID(player) else ""
+                                                            suggestMatching(Configs.GROUPS.serializableData.list.mapNotNull { group ->
+                                                                if (group.members.none { it == playerNameWithUUID })
+                                                                    group.name
+                                                                else null
+                                                            }, suggestionsBuilder)
+                                                        }
+                                                        .executes(AddPlayerToGroupCommand())
+                                                )
+                                        )
+                                )
+                        ).then(
+                            literal("remove")
+                                .then(
+                                    literal("player")
+                                        .then(
+                                            argument("playerName", StringArgumentType.string()).suggests { context, sb -> suggestMatching(context.source.server.playerNames.toList(), sb) }
+                                                .then(
+                                                    argument("groupName", StringArgumentType.string())
+                                                        .suggests { context, suggestionsBuilder ->
+                                                            val playerName = getString(context, "playerName")
+                                                            val player = context.source.server.playerManager.getPlayer(playerName)
+                                                            val playerNameWithUUID = if (player != null) getPlayerNameWithUUID(player) else ""
+                                                            suggestMatching(Configs.GROUPS.serializableData.list.mapNotNull { group ->
+                                                                if (group.members.any { it == playerNameWithUUID })
+                                                                    group.name
+                                                                else null
+                                                            }, suggestionsBuilder)
+                                                        }
+                                                        .executes(RemovePlayerFromGroupCommand())
+                                                )
+                                        )
                                 )
                         )
-                    )
-                ).then(
-                    literal("groups").then(
-                        literal("add").then(
-                            literal("player").then(
-                                argument("playerName", StringArgumentType.string()).suggests { context, sb -> suggestMatching(context.source.server.playerNames.toList(), sb) }
-                                    .then(
-                                        argument("groupName", StringArgumentType.string())
-                                            .suggests { context, suggestionsBuilder ->
-                                                val playerName = getString(context, "playerName")
-                                                val player = context.source.server.playerManager.getPlayer(playerName)
-                                                val playerNameWithUUID = if (player != null) getPlayerNameWithUUID(player) else ""
-                                                suggestMatching(Configs.GROUPS.serializableData.list.mapNotNull { group ->
-                                                    if (group.members.none { it == playerNameWithUUID })
-                                                        group.name
-                                                    else null
-                                                }, suggestionsBuilder)
-                                            }
-                                            .executes(AddPlayerToGroupCommand())
+                )
+                .then(
+                    literal("create")
+                        .then(
+                            literal("group")
+                                .then(
+                                    argument("groupName", StringArgumentType.string()).then(
+                                        argument("weight", IntegerArgumentType.integer()).executes(CreateGroupCommand())
                                     )
+                                )
+                        )
+                )
+                .then(
+                    literal("remove")
+                        .then(
+                            literal("group")
+                                .then(
+                                    argument("groupName", StringArgumentType.string()).suggests { _, sb -> suggestMatching(Configs.GROUPS.serializableData.list.map { it.name }, sb) }.executes(RemoveGroupCommand())
+                                )
+                        )
+                )
+                .then(
+                    literal("show")
+                        .then(
+                            literal("group").then(
+                                argument("groupName", StringArgumentType.string()).suggests { _, sb -> suggestMatching(Configs.GROUPS.serializableData.list.map { it.name }, sb) }
+                                    .executes(Command {context ->
+                                        val groupName = getString(context, "groupName")
+                                        Configs.GROUPS.serializableData.list.firstOrNull { it.name == groupName }?.let {
+//                                            context.source.sendMessage(Text.literal("Here is some infos about group $groupName").setStyle(Style.EMPTY.withColor(Formatting.GOLD)))
+                                             // TODO find a good way to format permissions and members and have a nice message
+                                        }
+                                        return@Command SINGLE_SUCCESS
+                                    })
                             )
                         )
-                    ).then(
-                        literal("remove").then(
-                            literal("player").then(
-                                argument("playerName", StringArgumentType.string()).suggests { context, sb -> suggestMatching(context.source.server.playerNames.toList(), sb) }
-                                    .then(
-                                        argument("groupName", StringArgumentType.string())
-                                            .suggests { context, suggestionsBuilder ->
-                                                val playerName = getString(context, "playerName")
-                                                val player = context.source.server.playerManager.getPlayer(playerName)
-                                                val playerNameWithUUID = if (player != null) getPlayerNameWithUUID(player) else ""
-                                                suggestMatching(Configs.GROUPS.serializableData.list.mapNotNull { group ->
-                                                    if (group.members.any { it == playerNameWithUUID })
-                                                        group.name
-                                                    else null
-                                                }, suggestionsBuilder)
-                                            }
-                                            .executes(RemovePlayerFromGroupCommand())
-                                    )
-                            )
-                        )
-                    )
-                ).then(
-                    literal("create").then(
-                        literal("group").then(
-                            argument("groupName", StringArgumentType.string()).then(
-                                argument("weight", IntegerArgumentType.integer()).executes(CreateGroupCommand())
-                            )
-                        )
-                    )
-                ).then(
-                    literal("remove").then(
-                        literal("group").then(
-                            argument("groupName", StringArgumentType.string()).suggests{_, sb -> suggestMatching(Configs.GROUPS.serializableData.list.map { it.name },sb) }.executes(RemoveGroupCommand())
-                        )
-                    )
                 )
             dispatcher.register(cmd)
         }
