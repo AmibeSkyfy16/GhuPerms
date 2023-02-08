@@ -1,5 +1,6 @@
 package ch.skyfy.ghuperms.callback;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContextBuilder;
@@ -18,10 +19,11 @@ public interface OnParseNodesCallback {
                 public <S> TypedActionResult<ParseResults<S>> onParseNode(CommandNode<S> node,
                                                                           StringReader originalReader,
                                                                           CommandContextBuilder<S> contextSoFar,
-                                                                          ParseResults<S> parseResults
+                                                                          ParseResults<S> parseResults,
+                                                                          CommandDispatcher<S> commandDispatcher
                 ) {
                     for (var onCanUseCallback2 : onCanUseCallbackS) {
-                        onCanUseCallback2.onParseNode(node, originalReader, contextSoFar, parseResults);
+                        onCanUseCallback2.onParseNode(node, originalReader, contextSoFar, parseResults, commandDispatcher);
                     }
                     return TypedActionResult.pass(parseResults);
                 }
@@ -32,7 +34,8 @@ public interface OnParseNodesCallback {
             CommandNode<S> node,
             StringReader originalReader,
             CommandContextBuilder<S> contextSoFar,
-            ParseResults<S> parseResults
+            ParseResults<S> parseResults,
+            CommandDispatcher<S> commandDispatcher
     );
 
 }

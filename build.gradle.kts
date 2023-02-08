@@ -64,7 +64,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${properties["fabric_kotlin_version"]}")
 
 //    transitiveInclude(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")!!)
-    transitiveInclude(implementation("ch.skyfy.json5configlib:json5-config-lib:1.0.21")!!)
+    transitiveInclude(implementation("ch.skyfy.json5configlib:json5-config-lib:1.0.22")!!)
 
     handleIncludes(project, transitiveInclude)
 

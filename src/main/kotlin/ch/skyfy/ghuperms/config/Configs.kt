@@ -11,7 +11,7 @@ object Configs {
     val COMMAND_ALIASES = ConfigData.invoke<CommandAliasesConfig, DefaultCommandAliasesConfig>(GhuPermsMod.CONFIG_DIRECTORY.resolve("command-aliases.json5"), true)
 
     @JvmField
-    val PERMISSIONS_DATA = ConfigData.invoke<PermissionsData, DefaultPermissionsData>(GhuPermsMod.CONFIG_DIRECTORY.resolve("all-permission.json5"), false)
+    val PERMISSIONS_DATA = ConfigData.invoke<PermissionsData, DefaultPermissionsData>(GhuPermsMod.CONFIG_DIRECTORY.resolve("all-permissions.json5"), false)
 
     @JvmField
     val GROUPS = ConfigData.invoke<Groups, DefaultGroups>(GhuPermsMod.CONFIG_DIRECTORY.resolve("groups.json5"), true)

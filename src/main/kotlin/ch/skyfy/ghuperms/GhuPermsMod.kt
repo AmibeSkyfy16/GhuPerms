@@ -2,6 +2,7 @@ package ch.skyfy.ghuperms
 
 import ch.skyfy.ghuperms.callback.AddToOperatorsCallback
 import ch.skyfy.ghuperms.callback.RemoveFromOperatorsCallback
+import ch.skyfy.ghuperms.commands.PermissionCmd
 import ch.skyfy.ghuperms.commands.ReloadFilesCmd
 import ch.skyfy.ghuperms.config.Configs
 import ch.skyfy.ghuperms.data.Group
@@ -37,7 +38,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
             val nameWithUUID: String = profile.name + "#" + profile.id.toString()
             Configs.GROUPS.serializableData.list.firstOrNull { it.name == "OP" }?.let { group ->
                 Configs.GROUPS.updateIterableNested(Group::members, group.members) {
-                    if(!it.contains(nameWithUUID))it.add(nameWithUUID)
+                    if (!it.contains(nameWithUUID)) it.add(nameWithUUID)
                 }
             }
         }
@@ -63,6 +64,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
 
     private fun registerCommands() = CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
         ReloadFilesCmd.register(dispatcher)
+        PermissionCmd.register(dispatcher)
     }
 
 }
