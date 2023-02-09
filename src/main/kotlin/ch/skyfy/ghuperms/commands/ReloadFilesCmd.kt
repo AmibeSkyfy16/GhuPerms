@@ -56,7 +56,7 @@ class ReloadFilesCmd : Command<ServerCommandSource> {
             context.source.sendFeedback(Text.literal("Configuration could not be reloaded"), false)
             GhuPermsMod.LOGGER.warn("Configuration could not be reloaded")
         } else {
-            if (context.source.player is ServerPlayerEntity) context.source.player!!.server.playerManager.sendCommandTree(context.source.player, )
+            if (context.source.player is ServerPlayerEntity) context.source.player!!.server.playerManager.sendCommandTree(context.source.player)
             context.source.sendFeedback(Text.literal("The configuration was successfully reloaded"), false)
             GhuPermsMod.LOGGER.info("The configuration was successfully reloaded")
         }

@@ -7,8 +7,8 @@ import ch.skyfy.json5configlib.ConfigData
 
 
 object Configs {
-    @JvmField
-    val COMMAND_ALIASES = ConfigData.invoke<CommandAliasesConfig, DefaultCommandAliasesConfig>(GhuPermsMod.CONFIG_DIRECTORY.resolve("command-aliases.json5"), true)
+//    @JvmField
+//    val COMMAND_ALIASES = ConfigData.invoke<CommandAliasesConfig, DefaultCommandAliasesConfig>(GhuPermsMod.CONFIG_DIRECTORY.resolve("command-aliases.json5"), true)
 
     @JvmField
     val PERMISSIONS_DATA = ConfigData.invoke<PermissionsData, DefaultPermissionsData>(GhuPermsMod.CONFIG_DIRECTORY.resolve("all-permissions.json5"), false)

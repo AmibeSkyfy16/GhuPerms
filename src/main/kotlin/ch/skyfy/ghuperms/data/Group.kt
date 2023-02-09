@@ -20,7 +20,7 @@ data class Group(
 @Serializable
 data class Groups(
     @SerialComment("The list of groups to which players can belong and therefore have access to the command with the corresponding permissions")
-    val list: MutableSet<Group>
+    var list: MutableSet<Group>
 ) : Validatable
 
 class DefaultGroups : Defaultable<Groups> {

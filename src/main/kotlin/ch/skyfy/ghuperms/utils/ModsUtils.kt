@@ -2,31 +2,30 @@ package ch.skyfy.ghuperms.utils
 
 import ch.skyfy.ghuperms.GhuPermsMod
 import ch.skyfy.ghuperms.config.Configs
-import ch.skyfy.ghuperms.data.Group
-import javafx.application.Application
 import net.minecraft.server.PlayerManager
 import net.minecraft.server.network.ServerPlayerEntity
 import java.nio.file.Paths
 import kotlin.io.path.*
 
+@Suppress("unused")
 object ModsUtils {
 
     fun getPlayerNameWithUUID(spe: ServerPlayerEntity) = "${spe.name.string}#${spe.uuidAsString}"
 
-    fun getPermsByPlayer(playerNameWithUUID: String) : List<Group> {
-        return Configs.GROUPS.serializableData.list.filter { group ->
-            group.members.any { it == playerNameWithUUID }
-        }.sortedByDescending { group -> group.weight }
-    }
+    fun getPlayerNameFromNameWithUUID(nameWithUUID: String) = if (nameWithUUID.split("#").size == 2) nameWithUUID.split("#")[0] else nameWithUUID
 
-    fun sendCommandTreeToAll(playerManager: PlayerManager){
-        for (serverPlayerEntity in playerManager.playerList) {
-            playerManager.sendCommandTree(serverPlayerEntity)
-        }
+    fun getPlayerUUIDFromNameWithUUID(nameWithUUID: String) = if (nameWithUUID.split("#").size == 2) nameWithUUID.split("#")[1] else GhuPermsMod.PLAYERS_NAMES_AND_UUIDS[nameWithUUID] ?: ""
+
+    fun getPermsByPlayer(playerNameWithUUID: String) = Configs.GROUPS.serializableData.list.filter { group -> group.members.any { it == playerNameWithUUID } }.sortedByDescending { group -> group.weight }
+
+    fun getGroupByName(groupName: String) = Configs.GROUPS.serializableData.list.firstOrNull { it.name == groupName }
+
+    fun sendCommandTreeToAll(playerManager: PlayerManager) {
+        for (serverPlayerEntity in playerManager.playerList) playerManager.sendCommandTree(serverPlayerEntity)
     }
 
     @OptIn(ExperimentalPathApi::class)
-    fun canUseGUI() : Boolean {
+    fun canUseGUI(): Boolean {
         val javaHome = System.getProperty("java.home")
         val jmodsFolder = Paths.get(javaHome).resolve("jmods")
         if (jmodsFolder.exists()) {
@@ -42,13 +41,10 @@ object ModsUtils {
             )
 
             jmodsFolder.walk(PathWalkOption.INCLUDE_DIRECTORIES).iterator().forEach { path ->
-                if(map.containsKey(path.fileName.name)) map.putIfAbsent(path.fileName.name, "")
+                if (map.containsKey(path.fileName.name)) map.putIfAbsent(path.fileName.name, "")
             }
 
-            if(map.none { it.value == null }){
-                println("javafx is there")
-                return true
-            }
+            if (map.none { it.value == null }) return true
         }
         return false
     }

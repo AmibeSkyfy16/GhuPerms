@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CommandPermission(
     @SerialComment("The permission name (something like \"command.msg\" or \"command.gamerule\"")
-    val name: String,
+    var name: String,
     @SerialComment("The value of the permission, false means that the permission is denied")
-    val value: Boolean
+    var value: Boolean
 ) : Validatable

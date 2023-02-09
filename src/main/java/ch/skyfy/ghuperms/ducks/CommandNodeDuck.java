@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * Interface used to access all the custom fields and methods added to
- * {@link CommandNode}s by Command Hider. Any {@link CommandNode} can be casted
+ * {@link CommandNode}s by Command Hider. Any {@link CommandNode} can be cast
  * to this interface.
  *
  * @param <S> The type of {@link CommandSource} executing the command. May not
@@ -28,6 +28,7 @@ public interface CommandNodeDuck<S> {
 	 * special - but generally you should never need to use it as Command Hider
 	 * already mixes into {@link CommandNode#addChild(CommandNode)}.
 	 */
+	@SuppressWarnings("unused")
 	Set<CommandNode<S>> getParents();
 
 	/**

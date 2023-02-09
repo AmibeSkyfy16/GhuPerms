@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<fx:root fx:id="root_StackPane" prefHeight="100.0" prefWidth="500.0" type="StackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <TextField fx:id="permissionName_TextField" promptText="permission name" HBox.hgrow="ALWAYS" />
+            <ChoiceBox fx:id="value_ChoiceBox" prefWidth="50.0" />
+         </children>
+      </HBox>
+   </children>
+</fx:root>
