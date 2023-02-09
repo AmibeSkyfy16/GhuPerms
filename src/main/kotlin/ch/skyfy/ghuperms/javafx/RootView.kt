@@ -1,10 +1,11 @@
 package ch.skyfy.ghuperms.javafx
 
 import ch.skyfy.ghuperms.javafx.utils.FXMLUtils
+import ch.skyfy.ghuperms.javafx.utils.UIUtils
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.control.Label
+import javafx.scene.control.Button
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.StackPane
@@ -25,16 +26,19 @@ class RootView : StackPane(), Initializable {
     lateinit var root_VBox: VBox
 
     @FXML
-    lateinit var groups_Label: Label
+    lateinit var groups_Button: Button
+
+    private var groupsView = GroupsView()
 
     init { FXMLUtils.loadFXML(this) }
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
-        groups_Label.onMouseClicked = EventHandler { mouseEvent ->
+        groups_Button.onMouseClicked = EventHandler { mouseEvent ->
             if (mouseEvent.button == MouseButton.PRIMARY) {
-                val groupsView = GroupsView()
-                GridPane.setConstraints(groupsView, 1, 0)
-                second_GridPane.children.add(groupsView)
+                if (!UIUtils.isInGridPane(0, 1, groupsView, second_GridPane)) {
+                    GridPane.setConstraints(groupsView, 1, 0)
+                    second_GridPane.children.add(groupsView)
+                }
             }
         }
     }

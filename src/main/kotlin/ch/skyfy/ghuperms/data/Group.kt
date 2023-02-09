@@ -10,7 +10,7 @@ data class Group(
     @SerialComment("The name of the group")
     val name: String,
     @SerialComment("The weight of the group, the OP group has a weight of 100, it will have priority over other groups")
-    val weight: Int,
+    var weight: Int,
     @SerialComment("The list of permission")
     val permissions: MutableSet<CommandPermission>,
     @SerialComment("The players that are member of this group")

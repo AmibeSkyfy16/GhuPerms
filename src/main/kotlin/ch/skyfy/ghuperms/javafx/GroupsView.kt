@@ -5,6 +5,8 @@ import ch.skyfy.ghuperms.data.CommandPermission
 import ch.skyfy.ghuperms.data.Group
 import ch.skyfy.ghuperms.data.Groups
 import ch.skyfy.ghuperms.javafx.utils.FXMLUtils
+import ch.skyfy.ghuperms.javafx.utils.UIUtils.isInGridPane
+import ch.skyfy.ghuperms.javafx.utils.UIUtils.removeChildInGridPane
 import ch.skyfy.ghuperms.utils.TestUtils
 import ch.skyfy.json5configlib.update
 import javafx.beans.property.SimpleListProperty
@@ -36,10 +38,10 @@ class GroupsView : StackPane(), Initializable {
     lateinit var groups_ChoiceBox: ChoiceBox<String>
 
     @FXML
-    lateinit var members_Label: Label
+    lateinit var members_Button: Button
 
     @FXML
-    lateinit var permissions_Label: Label
+    lateinit var permissions_Button: Button
 
     @FXML
     lateinit var groupWeight_TextField: TextField
@@ -147,11 +149,18 @@ class GroupsView : StackPane(), Initializable {
 
         }
 
-        members_Label.onMouseClicked = EventHandler { mouseEvent ->
+        // Update the weight in group
+        groupWeight_TextField.textProperty().addListener { _, _, newValue ->
+            groups.firstOrNull { it.name == groups_ChoiceBox.value }?.let {
+                it.weight = newValue.toIntOrNull() ?: -1
+            }
+        }
+
+        members_Button.onMouseClicked = EventHandler { mouseEvent ->
             if (mouseEvent.button == MouseButton.PRIMARY) showMembersView()
         }
 
-        permissions_Label.onMouseClicked = EventHandler { mouseEvent ->
+        permissions_Button.onMouseClicked = EventHandler { mouseEvent ->
             if (mouseEvent.button == MouseButton.PRIMARY) showPermissionsView()
         }
 
@@ -166,12 +175,10 @@ class GroupsView : StackPane(), Initializable {
         apply_Button.setOnAction {
             val updateGroups = mutableSetOf<Group>()
             groups_ChoiceBox.items.forEach { groupName ->
-                val members = membersView.membersProperty[groupName]?.toMutableSet()
-                val permissions = permissionsView.permissionsProperty[groupName]?.toMutableSet()
-                val weight = groups.firstOrNull { it.name == groupName }?.weight
-
-                if (members == null || permissions == null || weight == null) return@forEach
-                else updateGroups.add(Group(groupName, weight, permissions, members.map { it.get() }.toMutableSet()))
+                val members = membersView.membersProperty[groupName]?.toMutableSet() ?: mutableSetOf()
+                val permissions = permissionsView.permissionsProperty[groupName]?.toMutableSet() ?: mutableSetOf()
+                val weight = groups.firstOrNull { it.name == groupName }?.weight ?: 0
+                updateGroups.add(Group(groupName, weight, permissions, members.map { it.get() }.toMutableSet()))
             }
 
             Configs.GROUPS.update(Groups::list, updateGroups)
@@ -216,7 +223,7 @@ class GroupsView : StackPane(), Initializable {
         }
         contextMenu.items.add(menuItem1)
 
-        members_Label.contextMenu = contextMenu
+        members_Button.contextMenu = contextMenu
     }
 
     private fun buildPermissionsContextMenu() {
@@ -261,7 +268,7 @@ class GroupsView : StackPane(), Initializable {
         }
         contextMenu.items.add(menuItem1)
 
-        permissions_Label.contextMenu = contextMenu
+        permissions_Button.contextMenu = contextMenu
     }
 
     private fun showMembersView() {
@@ -277,31 +284,6 @@ class GroupsView : StackPane(), Initializable {
             removeChildInGridPane(2, 0, root_GridPane)
             GridPane.setConstraints(permissionsView, 0, 2)
             root_GridPane.children.add(permissionsView)
-        }
-    }
-
-    private inline fun <reified T> getNodeByRowColumnIndex(row: Int, column: Int, gridPane: GridPane): T? {
-        for (node in gridPane.childrenUnmodifiable) {
-            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-                return if (node is T) node
-                else null
-            }
-        }
-        return null
-    }
-
-    private inline fun <reified T> isInGridPane(row: Int, column: Int, target: T, gridPane: GridPane): Boolean {
-        for (node in gridPane.childrenUnmodifiable)
-            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column)
-                return node is T && node == target
-        return false
-    }
-
-    @Suppress("SameParameterValue")
-    private fun removeChildInGridPane(row: Int, column: Int, gridPane: GridPane) {
-        val listIterator = gridPane.children.listIterator()
-        listIterator.forEachRemaining { node ->
-            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) listIterator.remove()
         }
     }
 

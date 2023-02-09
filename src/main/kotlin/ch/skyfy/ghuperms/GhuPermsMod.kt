@@ -45,6 +45,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
         // User that use the PermissionManagerApp will cause a modification of the list variable when pressing the APPLY button
         Configs.GROUPS.registerOnUpdateOn(Groups::list) {
             if (it is SetOperation<*, *>) {
+                updatePlayerNameInConfig()
                 @Suppress("DEPRECATION")
                 sendCommandTreeToAll((FabricLoader.getInstance().gameInstance as MinecraftServer).playerManager)
             }
@@ -105,6 +106,30 @@ class GhuPermsMod : DedicatedServerModInitializer {
         ReloadFilesCmd.register(dispatcher)
         PermissionsCmd.register(dispatcher)
         StartGUICmd.register(dispatcher)
+    }
+
+    private fun updatePlayerNameInConfig() {
+        // When using the GUI to add members, we just add their name,
+        // except that all the code is based on value keys in the format <playerName>#<UUID>,
+        // so when a player comes back, we have to change the member name
+        Configs.GROUPS.serializableData.list.forEach { group ->
+            Configs.GROUPS.updateIterableNested(Group::members, group.members) { members ->
+                val nameWithUUIDToAdd = mutableSetOf<String>()
+                val iterator = members.iterator()
+                while (iterator.hasNext()) {
+                    val next = iterator.next()
+                    if (next.split("#").size == 1) {
+                        PLAYERS_NAMES_AND_UUIDS.firstNotNullOfOrNull { if (it.key == next) it else null }?.let {
+                            if(members.contains(it.key)){
+                                iterator.remove()
+                                nameWithUUIDToAdd.add("${it.key}#${it.value}")
+                            }
+                        }
+                    }
+                }
+                members.addAll(nameWithUUIDToAdd)
+            }
+        }
     }
 
 }
