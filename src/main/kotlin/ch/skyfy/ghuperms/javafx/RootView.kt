@@ -30,7 +30,10 @@ class RootView : StackPane(), Initializable {
 
     private var groupsView = GroupsView()
 
-    init { FXMLUtils.loadFXML(this) }
+    init {
+        UIUtils.loadFont()
+        FXMLUtils.loadFXML(this)
+    }
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         groups_Button.onMouseClicked = EventHandler { mouseEvent ->

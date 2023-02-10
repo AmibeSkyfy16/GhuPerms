@@ -32,6 +32,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
         val CONFIG_DIRECTORY: Path = FabricLoader.getInstance().configDir.resolve(MOD_ID)
         val LOGGER: Logger = LogManager.getLogger(GhuPermsMod::class.java)
         val PLAYERS_NAMES_AND_UUIDS = mutableMapOf<String, String>()
+        val MOD_CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).get()
     }
 
     init {
@@ -120,7 +121,7 @@ class GhuPermsMod : DedicatedServerModInitializer {
                     val next = iterator.next()
                     if (next.split("#").size == 1) {
                         PLAYERS_NAMES_AND_UUIDS.firstNotNullOfOrNull { if (it.key == next) it else null }?.let {
-                            if(members.contains(it.key)){
+                            if (members.contains(it.key)) {
                                 iterator.remove()
                                 nameWithUUIDToAdd.add("${it.key}#${it.value}")
                             }

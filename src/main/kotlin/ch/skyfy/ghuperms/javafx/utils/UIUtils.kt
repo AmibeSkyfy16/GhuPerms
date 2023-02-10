@@ -1,6 +1,11 @@
 package ch.skyfy.ghuperms.javafx.utils
 
+import ch.skyfy.ghuperms.GhuPermsMod
+import ch.skyfy.ghuperms.GhuPermsMod.Companion.MOD_CONTAINER
+import javafx.application.Platform
 import javafx.scene.layout.GridPane
+import javafx.scene.text.Font
+import java.util.zip.ZipInputStream
 
 object UIUtils {
 
@@ -30,6 +35,10 @@ object UIUtils {
                 return@forEachRemaining
             }
         }
+    }
+
+    fun loadFont(){
+        Font.loadFont(GhuPermsMod::class.java.classLoader.getResource("javafx/ui/font/FiraCode-Bold.ttf")!!.toExternalForm(), 1.0)
     }
 
 }

@@ -6,3 +6,6 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.buildFileName = "shadowJar-build.gradle.kts"
+//rootProject.buildFileName = "build.gradle.kts"

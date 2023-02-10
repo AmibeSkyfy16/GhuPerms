@@ -38,7 +38,8 @@ class StartGUICmd : Command<ServerCommandSource> {
     }
 
     override fun run(context: CommandContext<ServerCommandSource>): Int {
-        if (ModsUtils.canUseGUI()) {
+//        if (ModsUtils.canUseGUI()) {
+        if (true) {
             println("Starting the JavaFX Permission Manager")
             EXECUTOR.submit {
                 if (!applicationLaunched) {

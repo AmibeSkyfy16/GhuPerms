@@ -52,8 +52,16 @@ base {
 
 repositories {
     mavenCentral()
+    google()
     maven("https://repo.repsy.io/mvn/amibeskyfy16/repo")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+
+    maven {
+        name = "sonatype"
+        url = uri("https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/")
+    }
 }
 
 dependencies {
@@ -64,8 +72,18 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric_version"]}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${properties["fabric_kotlin_version"]}")
 
-//    transitiveInclude(implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")!!)
     transitiveInclude(implementation("ch.skyfy.json5configlib:json5-config-lib:1.0.22")!!)
+
+    // Tried to add javafx dep, but not working
+//    transitiveInclude(implementation("org.openjfx:javafx:17.0.6")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-base:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-graphics:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-controls:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-fxml:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-swing:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-media:17.0.6:win")!!)
+//    transitiveInclude(implementation("org.openjfx:javafx-web:17.0.6:win")!!)
 
     handleIncludes(project, transitiveInclude)
 
@@ -84,12 +102,21 @@ tasks {
         }
     }
 
-    javafx{
-        version = "17"
-        modules("javafx.controls", "javafx.fxml")
+    javafx {
+        version = "17.0.6"
+//        modules("javafx.controls", "javafx.fxml")
     }
 
-    java { withSourcesJar() }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(javaVersion.toString()))
+            vendor.set(JvmVendorSpec.BELLSOFT)
+        }
+
+        withSourcesJar()
+        withJavadocJar()
+    }
+
 
     named<Wrapper>("wrapper") {
         gradleVersion = "7.6"
