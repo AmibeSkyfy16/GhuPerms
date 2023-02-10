@@ -7,5 +7,5 @@ pluginManagement {
     }
 }
 
-rootProject.buildFileName = "shadowJar-build.gradle.kts"
-//rootProject.buildFileName = "build.gradle.kts"
+//rootProject.buildFileName = "shadowJar-build.gradle.kts"
+rootProject.buildFileName = "build.gradle.kts"

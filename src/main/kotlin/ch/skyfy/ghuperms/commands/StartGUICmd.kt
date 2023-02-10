@@ -11,6 +11,7 @@ import javafx.application.Platform
 import javafx.stage.Stage
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.text.Text
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.reflect.full.createInstance
@@ -38,8 +39,7 @@ class StartGUICmd : Command<ServerCommandSource> {
     }
 
     override fun run(context: CommandContext<ServerCommandSource>): Int {
-//        if (ModsUtils.canUseGUI()) {
-        if (true) {
+        if (ModsUtils.canUseGUI()) {
             println("Starting the JavaFX Permission Manager")
             EXECUTOR.submit {
                 if (!applicationLaunched) {
@@ -48,6 +48,8 @@ class StartGUICmd : Command<ServerCommandSource> {
                     Application.launch(PermissionManagerApp::class.java)
                 } else Platform.runLater { PermissionManagerApp::class.createInstance().start(Stage()) }
             }
+        }else{
+            context.source.sendMessage(Text.literal("Unable to start Permission Manager"))
         }
         return SINGLE_SUCCESS
     }

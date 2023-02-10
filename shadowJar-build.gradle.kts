@@ -6,8 +6,8 @@ import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 plugins {
     id("fabric-loom") version "1.1-SNAPSHOT"
-    id("org.jetbrains.kotlin.jvm") version "1.8.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
+    id("org.jetbrains.kotlin.jvm") version "1.8.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     id("org.openjfx.javafxplugin") version "0.0.13"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     idea
@@ -21,12 +21,8 @@ base {
 
 repositories {
     mavenCentral()
-    google()
     maven("https://repo.repsy.io/mvn/amibeskyfy16/repo")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    maven(url = "https://dl.bintray.com/animeshz/maven")
-    maven("https://packages.jetbrains.team/maven/p/skija/maven")
 }
 
 dependencies {
@@ -39,37 +35,13 @@ dependencies {
 
     shadow("ch.skyfy.json5configlib:json5-config-lib:1.0.22")
 
-//    shadow("org.openjfx:javafx:17.0.2:win")
-    shadow("org.openjfx:javafx-base:17.0.2:win"){
-//        exclude("org.openjfx")
-    }
-    shadow("org.openjfx:javafx-graphics:17.0.2:win"){
-//        exclude("org.openjfx")
-    }
-//    shadow("org.openjfx:javafx-controls:17.0.2:win"){
-//        exclude("org.openjfx")
-//    }
-//    shadow("org.openjfx:javafx-fxml:17.0.2:win"){
-//        exclude("org.openjfx")
-//    }
-//    shadow("org.openjfx:javafx-swing:17.0.2:win"){
-//        exclude("org.openjfx")
-//    }
-//    shadow("org.openjfx:javafx-media:17.0.2:win"){
-//        exclude("org.openjfx")
-//    }
-//    shadow("org.openjfx:javafx-web:17.0.2:win"){
-//        exclude("org.openjfx")
-//    }
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.10")
 }
 
 configurations {
     shadow.get()
     modImplementation.get().extendsFrom(shadow.get())
 }
-
 
 tasks {
 
@@ -96,7 +68,7 @@ tasks {
     remapJar {
         dependsOn(shadowJar.get())
         inputFile.set(shadowJar.get().archiveFile)
-        exclude("module-info.class")
+//        exclude("module-info.class")
     }
 
     javafx {
@@ -109,7 +81,7 @@ tasks {
             languageVersion.set(JavaLanguageVersion.of(javaVersion.toString()))
             vendor.set(JvmVendorSpec.BELLSOFT)
         }
-        modularity.inferModulePath.set(false)
+//        modularity.inferModulePath.set(false)
         withSourcesJar()
         withJavadocJar()
     }
