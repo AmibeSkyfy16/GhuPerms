@@ -33,7 +33,6 @@ class DefaultGroups : Defaultable<Groups> {
                     mutableSetOf(
                         CommandPermission("command", false),
                         CommandPermission("command.msg", true),
-                        CommandPermission("command.homes.create.titi", true),
                         CommandPermission("command.ghuperms", true)
                     ),
                     mutableSetOf()

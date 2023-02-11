@@ -6,6 +6,8 @@ import ch.skyfy.ghuperms.callback.OnParseNodesCallback;
 import ch.skyfy.ghuperms.config.Configs;
 import ch.skyfy.ghuperms.ducks.CommandNodeDuck;
 import ch.skyfy.ghuperms.permission.Permissions;
+import ch.skyfy.ghuperms.prelaunch.config.CommandAlias;
+import ch.skyfy.ghuperms.prelaunch.config.PreLaunchConfigs;
 import ch.skyfy.ghuperms.utils.ModsUtils;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
@@ -154,8 +156,23 @@ public class CommandNodeMixinImpl {
                 var sb = new StringBuilder(prefix);
                 for (int i = greater.size() - 1; i >= 0; i--) {
                     var ssCommandNode = greater.get(i);
-                    if (!sb.isEmpty()) sb.append(".");
-                    sb.append(ssCommandNode.getName());
+                    var commandName = ssCommandNode.getName();
+                    for (CommandAlias commandAlias : PreLaunchConfigs.COMMANDS_ALIASES.getSerializableData().component2()) {
+                        if(commandAlias.getAlias().equalsIgnoreCase(ssCommandNode.getName())){
+                            commandName = commandAlias.getBaseCommand();
+                        }
+                    }
+
+                    if(commandName.contains(":")){
+                        var splits = commandName.split(":");
+                        if(splits.length >= 2) {
+                            sb.replace(0, 0, splits[0] + ":");
+                            sb.append(".").append(splits[1]);
+                        }
+                    }else{
+                        if (!sb.isEmpty()) sb.append(".");
+                        sb.append(commandName);
+                    }
                 }
 
                 Configs.PERMISSIONS_DATA.getSerializableData().component1().add(sb.toString());

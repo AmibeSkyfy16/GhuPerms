@@ -14,7 +14,10 @@ public class UnitTestJava {
     }
     @Test
     public void shouldGetGenericType() {
-        System.out.println(new ConcreteClass().getParameterClass());
+
+        var sb = new StringBuilder("command");
+        sb.replace(0, 0, "mc:");
+        System.out.println(sb.toString());
 
     }
 

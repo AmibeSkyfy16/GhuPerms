@@ -68,7 +68,7 @@ dependencies {
 
 
     transitiveInclude(implementation("ch.skyfy.json5configlib:json5-config-lib:1.0.22")!!)
-    transitiveInclude(implementation("com.github.goxr3plus:FX-BorderlessScene:4.4.0")!!)
+//    transitiveInclude(implementation("com.github.goxr3plus:FX-BorderlessScene:4.4.0")!!)
 
     handleIncludes(project, transitiveInclude)
 

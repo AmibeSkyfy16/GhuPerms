@@ -118,8 +118,8 @@ public abstract class CommandNodeMixin<S> implements CommandNodeDuck<S> {
     @SuppressWarnings("unchecked")
     @Inject(method = "canUse", at = @At("RETURN"), cancellable = true, remap = false)
     private void commandHider$onCanUse(S source, CallbackInfoReturnable<Boolean> cir) {
-//        var result = CanUseCallback.EVENT.invoker().onCanUse(children, parents, ancestries, ((CommandNode<S>) (Object) this), source);
-//        cir.setReturnValue(result.getValue());
-//        cir.cancel();
+        var result = CanUseCallback.EVENT.invoker().onCanUse(children, parents, ancestries, ((CommandNode<S>) (Object) this), source);
+        cir.setReturnValue(result.getValue());
+        cir.cancel();
     }
 }

@@ -12,11 +12,11 @@ fun interface CommandDispatcherOnRegisterCallback {
         @JvmField
         val EVENT: Event<CommandDispatcherOnRegisterCallback> = EventFactory.createArrayBacked(CommandDispatcherOnRegisterCallback::class.java) { listeners ->
             CommandDispatcherOnRegisterCallback { literal ->
-                return@CommandDispatcherOnRegisterCallback listeners.firstOrNull()?.onThen(literal) ?: TypedActionResult.pass("")
+                listeners.firstOrNull()?.onThen(literal)
             }
         }
     }
 
-    fun onThen(literal: LiteralArgumentBuilder<*>): TypedActionResult<String>
+    fun onThen(literal: LiteralArgumentBuilder<*>)
 
 }
