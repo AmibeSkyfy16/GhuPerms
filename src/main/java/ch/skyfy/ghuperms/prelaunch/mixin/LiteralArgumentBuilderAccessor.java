@@ -6,9 +6,8 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(value = LiteralArgumentBuilder.class, remap = false)
-public interface LiteralAccessor {
+public interface LiteralArgumentBuilderAccessor {
     @Mutable
     @Accessor("literal")
     void setLiteral(String literal);
-
 }

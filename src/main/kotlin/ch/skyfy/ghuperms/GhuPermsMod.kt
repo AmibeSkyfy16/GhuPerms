@@ -10,6 +10,7 @@ import ch.skyfy.ghuperms.data.CommandPermission
 import ch.skyfy.ghuperms.data.Group
 import ch.skyfy.ghuperms.data.Groups
 import ch.skyfy.ghuperms.prelaunch.GhuPermsPreLauncher
+import ch.skyfy.ghuperms.prelaunch.GhuPermsPreLauncher.Companion.MOD_ID
 import ch.skyfy.ghuperms.prelaunch.config.PreLaunchConfigs
 import ch.skyfy.ghuperms.utils.ModsUtils.getPlayerNameFromNameWithUUID
 import ch.skyfy.ghuperms.utils.ModsUtils.getPlayerNameWithUUID
@@ -17,39 +18,32 @@ import ch.skyfy.ghuperms.utils.ModsUtils.sendCommandTreeToAll
 import ch.skyfy.json5configlib.ConfigManager
 import ch.skyfy.json5configlib.SetOperation
 import ch.skyfy.json5configlib.updateIterableNested
-import com.mojang.brigadier.Command
 import net.fabricmc.api.DedicatedServerModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.command.CommandManager.literal
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-import java.nio.file.Path
 import kotlin.io.path.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class GhuPermsMod : DedicatedServerModInitializer {
 
     companion object {
-        const val MOD_ID: String = "ghuperms"
-        val CONFIG_DIRECTORY: Path = FabricLoader.getInstance().configDir.resolve(MOD_ID)
-        val LOGGER: Logger = LogManager.getLogger(GhuPermsMod::class.java)
+//        const val MOD_ID: String = "ghuperms"
+//        val CONFIG_DIRECTORY: Path = FabricLoader.getInstance().configDir.resolve(MOD_ID)
+//        val LOGGER: Logger = LogManager.getLogger(GhuPermsMod::class.java)
+
+        const val COMMAND_PERMISSION_PREFIX = "command"
         val PLAYERS_NAMES_AND_UUIDS = mutableMapOf<String, String>()
         val MOD_CONTAINER = FabricLoader.getInstance().getModContainer(MOD_ID).get()
 
+
         fun convertNameSpacedCommandToPermission(command: String): String? {
-            val prefix = "command"
-            val sb = StringBuilder(prefix)
+            val sb = StringBuilder(COMMAND_PERMISSION_PREFIX)
             if (command.contains(":")) {
                 val splits = command.split(":")
-                if (splits.size >= 2) {
-                    sb.replace(0, 0, splits[0] + ":")
-                    sb.append(".").append(splits[1])
-                    return sb.toString()
-                }
+                if (splits.size >= 2) return sb.replace(0, 0, splits[0] + ":").append(".").append(splits[1]).toString()
             }
             return null
         }
@@ -77,8 +71,8 @@ class GhuPermsMod : DedicatedServerModInitializer {
 
                             // Check if matching with command namespacing
                             if (!next.name.contains(":")) {
-                                val commandName = next.name.substringAfterLast("command.")
-                                GhuPermsPreLauncher.renamedCommands[commandName]?.let {
+                                val commandName = next.name.substringAfterLast("$COMMAND_PERMISSION_PREFIX.")
+                                GhuPermsPreLauncher.namespacedCommands[commandName]?.let {
                                     val nameSpacedPermission = convertNameSpacedCommandToPermission(it.first)
 
                                     if(nameSpacedPermission != null && nameSpacedPermission == it.first){
@@ -116,11 +110,6 @@ class GhuPermsMod : DedicatedServerModInitializer {
                 }
 
             }
-        }
-
-
-        CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
-            dispatcher.register(literal("ACommand").executes(Command { 1 }))
         }
 
         // User that use the PermissionManagerApp will cause a modification of the list variable when pressing the APPLY button

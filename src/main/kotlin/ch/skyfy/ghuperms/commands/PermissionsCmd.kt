@@ -46,7 +46,7 @@ class PermissionsCmd : Command<ServerCommandSource> {
                             literal("add")
                                 .then(
                                     argument("permissionName", StringArgumentType.string())
-                                        .suggests { _, suggestionsBuilder -> suggestMatching(Configs.PERMISSIONS_DATA.serializableData.list, suggestionsBuilder) }
+                                        .suggests { _, suggestionsBuilder -> suggestMatching(Configs.PERMISSIONS_DATA.serializableData.list.map { "\"$it\"" }, suggestionsBuilder) }
                                         .then(
                                             argument("value", BoolArgumentType.bool())
                                                 .suggests { _, suggestionsBuilder -> suggestMatching(listOf(true, false), suggestionsBuilder, { t -> t.toString() }, { _ -> Message { "" } }) }

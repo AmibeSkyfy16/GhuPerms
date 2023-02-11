@@ -4,9 +4,7 @@
   "package": "ch.skyfy.ghuperms.prelaunch.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "LiteralArgumentBuilderMixin",
-    "ArgumentBuilderMixin",
-    "LiteralAccessor",
+    "LiteralArgumentBuilderAccessor",
     "CommandDispatcherMixin"
   ],
   "server": [

@@ -2,7 +2,6 @@ package ch.skyfy.ghuperms;
 
 import ch.skyfy.ghuperms.callback.AddChildCallback;
 import ch.skyfy.ghuperms.callback.CanUseCallback;
-import ch.skyfy.ghuperms.callback.OnParseNodesCallback;
 import ch.skyfy.ghuperms.config.Configs;
 import ch.skyfy.ghuperms.ducks.CommandNodeDuck;
 import ch.skyfy.ghuperms.permission.Permissions;
@@ -17,7 +16,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.ModStatus;
 import net.minecraft.util.TypedActionResult;
 
 import java.util.*;

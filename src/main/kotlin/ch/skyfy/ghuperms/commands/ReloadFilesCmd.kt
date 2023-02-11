@@ -1,7 +1,7 @@
 package ch.skyfy.ghuperms.commands
 
-import ch.skyfy.ghuperms.GhuPermsMod
 import ch.skyfy.ghuperms.config.Configs
+import ch.skyfy.ghuperms.prelaunch.GhuPermsPreLauncher
 import ch.skyfy.json5configlib.ConfigManager
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.Command.SINGLE_SUCCESS
@@ -54,11 +54,11 @@ class ReloadFilesCmd : Command<ServerCommandSource> {
 
         if (list.contains(false)) {
             context.source.sendFeedback(Text.literal("Configuration could not be reloaded"), false)
-            GhuPermsMod.LOGGER.warn("Configuration could not be reloaded")
+            GhuPermsPreLauncher.LOGGER.warn("Configuration could not be reloaded")
         } else {
             if (context.source.player is ServerPlayerEntity) context.source.player!!.server.playerManager.sendCommandTree(context.source.player)
             context.source.sendFeedback(Text.literal("The configuration was successfully reloaded"), false)
-            GhuPermsMod.LOGGER.info("The configuration was successfully reloaded")
+            GhuPermsPreLauncher.LOGGER.info("The configuration was successfully reloaded")
         }
 
         return SINGLE_SUCCESS

@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = CommandDispatcher.class, remap = false)
 public class CommandDispatcherMixin<S> {
 
-
-
     @Inject(method = "register", at = @At("HEAD"))
     void onRegister(LiteralArgumentBuilder<S> command, CallbackInfoReturnable<LiteralCommandNode<S>> cir){
         CommandDispatcherOnRegisterCallback.EVENT.invoker().onThen(command);

@@ -82,9 +82,7 @@ tasks {
     processResources {
         inputs.property("version", project.version)
         filteringCharset = "UTF-8"
-        filesMatching("fabric.mod.json") {
-            expand(mutableMapOf("version" to project.version))
-        }
+        filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to project.version)) }
     }
 
     javafx {
@@ -97,11 +95,15 @@ tasks {
             languageVersion.set(JavaLanguageVersion.of(javaVersion.toString()))
             vendor.set(JvmVendorSpec.BELLSOFT)
         }
-
         withSourcesJar()
         withJavadocJar()
     }
 
+    named<Javadoc>("javadoc"){
+        options {
+            (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
+        }
+    }
 
     named<Wrapper>("wrapper") {
         gradleVersion = "7.6"
