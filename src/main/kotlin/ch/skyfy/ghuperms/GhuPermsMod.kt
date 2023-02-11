@@ -14,11 +14,14 @@ import ch.skyfy.ghuperms.utils.ModsUtils.sendCommandTreeToAll
 import ch.skyfy.json5configlib.ConfigManager
 import ch.skyfy.json5configlib.SetOperation
 import ch.skyfy.json5configlib.updateIterableNested
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.fabricmc.api.DedicatedServerModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.command.CommandManager.literal
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.nio.file.Path
@@ -42,6 +45,10 @@ class GhuPermsMod : DedicatedServerModInitializer {
 
     override fun onInitializeServer() {
         registerCommands()
+
+        CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
+            dispatcher.register(literal("ACommand").executes(Command { 1 }))
+        }
 
         // User that use the PermissionManagerApp will cause a modification of the list variable when pressing the APPLY button
         Configs.GROUPS.registerOnUpdateOn(Groups::list) {

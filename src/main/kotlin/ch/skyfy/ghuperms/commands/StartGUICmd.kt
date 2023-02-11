@@ -32,8 +32,10 @@ class StartGUICmd : Command<ServerCommandSource> {
         }
 
         fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
-            val cmd = literal("ghuperms").requires { source -> source.hasPermissionLevel(4) }
-                .then(literal("gui").executes(StartGUICmd()))
+            val cmd = literal("ghuperms").requires { source -> source.hasPermissionLevel(4) }.then(literal("gui").executes(StartGUICmd()))
+
+            dispatcher.register(literal("ghu").redirect(cmd.build()))
+
             dispatcher.register(cmd)
         }
     }

@@ -1,11 +1,10 @@
+@file:Suppress("unused")
+
 package ch.skyfy.ghuperms.javafx.utils
 
 import ch.skyfy.ghuperms.GhuPermsMod
-import ch.skyfy.ghuperms.GhuPermsMod.Companion.MOD_CONTAINER
-import javafx.application.Platform
 import javafx.scene.layout.GridPane
 import javafx.scene.text.Font
-import java.util.zip.ZipInputStream
 
 object UIUtils {
 

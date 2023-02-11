@@ -18,10 +18,17 @@
         "value": "ch.skyfy.ghuperms.GhuPermsMod"
       }
     ],
+    "preLaunch": [
+      {
+        "adapter": "kotlin",
+        "value": "ch.skyfy.ghuperms.prelaunch.GhuPermsPreLauncher"
+      }
+    ],
     "main": []
   },
   "mixins": [
-    "ghuperms.mixin.json"
+    "ghuperms.mixin.json",
+    "prelaunch.ghuperms.mixin.json"
   ],
   "depends": {
     "java": ">=17",

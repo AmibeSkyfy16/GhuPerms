@@ -1,4 +1,4 @@
-package ch.skyfy.ghuperms.prelaunchmixin;
+package ch.skyfy.ghuperms.prelaunch;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.RedirectModifier;
@@ -32,7 +32,6 @@ public class LiteralCommandNodeMixin {
     @Shadow
     @Final
     private String literalLowerCase;
-
 
     @Inject(
             method = "<init>",

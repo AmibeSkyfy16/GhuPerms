@@ -54,6 +54,7 @@ repositories {
     mavenCentral()
     maven("https://repo.repsy.io/mvn/amibeskyfy16/repo")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -63,8 +64,11 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${properties["loader_version"]}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric_version"]}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${properties["fabric_kotlin_version"]}")
+//    modImplementation("net.silkmc:silk-compose:1.0.4")
+
 
     transitiveInclude(implementation("ch.skyfy.json5configlib:json5-config-lib:1.0.22")!!)
+    transitiveInclude(implementation("com.github.goxr3plus:FX-BorderlessScene:4.4.0")!!)
 
     handleIncludes(project, transitiveInclude)
 

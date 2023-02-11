@@ -1,12 +1,9 @@
-import ch.skyfy.ghuperms.commands.StartGUICmd
-import ch.skyfy.ghuperms.javafx.PermissionManagerApp
-import javafx.application.Application
 import javafx.application.Platform
 import org.junit.jupiter.api.BeforeAll
 import kotlin.test.Test
 
 
-class Test {
+class UnitTestKt {
 
     companion object {
         @JvmStatic
@@ -17,10 +14,15 @@ class Test {
         }
     }
 
+
+
     @Test
     fun test() {
 
-        Application.launch(PermissionManagerApp::class.java)
+//        val events: MutableMap<KClass<*>, Array<*>> = mutableMapOf()
+//        events.put(String::class, Array<String>(1, init = {""}))
+
+//        Application.launch(PermissionManagerApp::class.java)
 
 //        println("")
 //        val str1 = "homes.commands.*"
