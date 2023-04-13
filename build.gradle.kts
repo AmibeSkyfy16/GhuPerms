@@ -1,45 +1,11 @@
 @file:Suppress("GradlePackageVersionRange")
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 val transitiveInclude: Configuration by configurations.creating
-
-fun DependencyHandlerScope.includeTransitive(
-    root: ResolvedDependency?,
-    dependencies: Set<ResolvedDependency>,
-    fabricLanguageKotlinDependency: ResolvedDependency,
-    checkedDependencies: MutableSet<ResolvedDependency> = HashSet()
-) {
-    dependencies.forEach {
-        if (checkedDependencies.contains(it) || (it.moduleGroup == "org.jetbrains.kotlin" && it.moduleName.startsWith("kotlin-stdlib")) || (it.moduleGroup == "org.slf4j" && it.moduleName == "slf4j-api"))
-            return@forEach
-
-        if (fabricLanguageKotlinDependency.children.any { kotlinDep -> kotlinDep.name == it.name }) {
-            println("Skipping -> ${it.name} (already in fabric-language-kotlin)")
-        } else {
-            include(it.name)
-            println("Including -> ${it.name} from ${root?.name}")
-        }
-        checkedDependencies += it
-
-        includeTransitive(root ?: it, it.children, fabricLanguageKotlinDependency, checkedDependencies)
-    }
-}
-
-// from : https://github.com/StckOverflw/TwitchControlsMinecraft/blob/4bf406893544c3edf52371fa6e7a6cc7ae80dc05/build.gradle.kts
-fun DependencyHandlerScope.handleIncludes(project: Project, configuration: Configuration) {
-    includeTransitive(
-        null,
-        configuration.resolvedConfiguration.firstLevelModuleDependencies,
-        project.configurations.getByName("modImplementation").resolvedConfiguration.firstLevelModuleDependencies
-            .first { it.moduleGroup == "net.fabricmc" && it.moduleName == "fabric-language-kotlin" }
-    )
-}
 
 plugins {
     id("fabric-loom") version "1.1-SNAPSHOT"
-    id("org.jetbrains.kotlin.jvm") version "1.8.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    id("org.jetbrains.kotlin.jvm") version "1.8.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
     id("org.openjfx.javafxplugin") version "0.0.13"
     idea
 }
@@ -72,7 +38,7 @@ dependencies {
 
     handleIncludes(project, transitiveInclude)
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.10")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.20")
 }
 
 tasks {
@@ -92,37 +58,36 @@ tasks {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(javaVersion.toString()))
-            vendor.set(JvmVendorSpec.BELLSOFT)
+//            languageVersion.set(JavaLanguageVersion.of(javaVersion.toString()))
+//            vendor.set(JvmVendorSpec.BELLSOFT)
         }
         withSourcesJar()
         withJavadocJar()
     }
 
-    named<Javadoc>("javadoc"){
+    named<Wrapper>("wrapper") {
+        gradleVersion = "8.1"
+        distributionType = Wrapper.DistributionType.BIN
+    }
+
+    named<Javadoc>("javadoc") {
         options {
             (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
         }
     }
 
-    named<Wrapper>("wrapper") {
-        gradleVersion = "7.6"
-        distributionType = Wrapper.DistributionType.BIN
+    named<Jar>("jar") {
+        from("LICENSE") { rename { "${it}_${base.archivesName.get()}" } }
     }
 
-    named<KotlinCompile>("compileKotlin") {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = javaVersion.toString()
+//        kotlinOptions.freeCompilerArgs += "-Xskip-prerelease-check" // Required by others project like SilkMC. Also add this to intellij setting under Compiler -> Kotlin Compiler -> Additional ...
     }
 
-    named<JavaCompile>("compileJava") {
+    withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
         options.release.set(javaVersion.toString().toInt())
-    }
-
-    named<Jar>("jar") {
-        from("LICENSE") {
-            rename { "${it}_${base.archivesName}" }
-        }
     }
 
     named<Test>("test") {
@@ -135,8 +100,9 @@ tasks {
     }
 
     val copyJarToTestServer = register("copyJarToTestServer") {
-        println("copy to server")
-        copyFile("build/libs/GhuPerms-${project.properties["mod_version"]}.jar", project.property("testServerModsFolder") as String)
+        println("copying jar to server")
+//        copyFile("build/libs/${project.properties["archives_name"]}-${project.properties["mod_version"]}.jar", project.property("testServerModsFolder") as String)
+//        copyFile("build/libs/${project.properties["archives_name"]}-${project.properties["mod_version"]}.jar", project.property("testClientModsFolder") as String)
     }
 
     build { doLast { copyJarToTestServer.get() } }
@@ -144,3 +110,35 @@ tasks {
 }
 
 fun copyFile(src: String, dest: String) = copy { from(src);into(dest) }
+
+fun DependencyHandlerScope.includeTransitive(
+    root: ResolvedDependency?,
+    dependencies: Set<ResolvedDependency>,
+    fabricLanguageKotlinDependency: ResolvedDependency,
+    checkedDependencies: MutableSet<ResolvedDependency> = HashSet()
+) {
+    dependencies.forEach {
+        if (checkedDependencies.contains(it) || (it.moduleGroup == "org.jetbrains.kotlin" && it.moduleName.startsWith("kotlin-stdlib")) || (it.moduleGroup == "org.slf4j" && it.moduleName == "slf4j-api"))
+            return@forEach
+
+        if (fabricLanguageKotlinDependency.children.any { kotlinDep -> kotlinDep.name == it.name }) {
+            println("Skipping -> ${it.name} (already in fabric-language-kotlin)")
+        } else {
+            include(it.name)
+            println("Including -> ${it.name} from ${root?.name}")
+        }
+        checkedDependencies += it
+
+        includeTransitive(root ?: it, it.children, fabricLanguageKotlinDependency, checkedDependencies)
+    }
+}
+
+// from : https://github.com/StckOverflw/TwitchControlsMinecraft/blob/4bf406893544c3edf52371fa6e7a6cc7ae80dc05/build.gradle.kts
+fun DependencyHandlerScope.handleIncludes(project: Project, configuration: Configuration) {
+    includeTransitive(
+        null,
+        configuration.resolvedConfiguration.firstLevelModuleDependencies,
+        project.configurations.getByName("modImplementation").resolvedConfiguration.firstLevelModuleDependencies
+            .first { it.moduleGroup == "net.fabricmc" && it.moduleName == "fabric-language-kotlin" }
+    )
+}
