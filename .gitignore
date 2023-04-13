@@ -1,5 +1,12 @@
 # Project exclude paths
 /.gradle/
-/build/
-/run/
 /.idea/
+
+/build/
+
+/run/
+
+/preconfiguration/doneclient.txt
+/preconfiguration/doneserver.txt
+/testclient/
+/testserver/
