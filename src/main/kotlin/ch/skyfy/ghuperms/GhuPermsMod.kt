@@ -24,7 +24,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
-import kotlin.io.path.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class GhuPermsMod : DedicatedServerModInitializer {
